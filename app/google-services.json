@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "589595565950",
+    "firebase_url": "https://fb-groopup-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "fb-groopup",
+    "storage_bucket": "fb-groopup.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:589595565950:android:b87e344832d66d4dd69d2f",
+        "android_client_info": {
+          "package_name": "com.android.groopup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "589595565950-ha6tfj4j75r4kf3m7r48nrpae2r66h5f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZREfrn6GIoR897xcoIEHOZ3QudeR885c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "589595565950-ha6tfj4j75r4kf3m7r48nrpae2r66h5f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
