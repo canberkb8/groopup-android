@@ -32,6 +32,9 @@
         <action
             android:id="@+id/action_homePageFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_homePageFragment_to_createGroupFragment"
+            app:destination="@id/createGroupFragment" />
     </fragment>
 
     <fragment
@@ -39,6 +42,16 @@
         android:name="com.android.groopup.ui.profile.ProfileFragment"
         android:label="ProfileFragment"
         tools:layout="@layout/fragment_profile">
+        <argument
+            android:name="userModel"
+            app:argType="com.android.groopup.data.remote.model.UserModel" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/createGroupFragment"
+        android:name="com.android.groopup.ui.creategroup.CreateGroupFragment"
+        android:label="CreateGroupFragment"
+        tools:layout="@layout/fragment_create_group">
         <argument
             android:name="userModel"
             app:argType="com.android.groopup.data.remote.model.UserModel" />

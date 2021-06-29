@@ -25,7 +25,7 @@
             <ImageView
                 android:id="@+id/img_backpress"
                 android:layout_width="30dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:clickable="true"
                 android:elevation="2dp"
                 android:focusable="true"
@@ -40,30 +40,29 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:text="Profile"
+                android:text="Create Group"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_xxlarge" />
 
-            <TextView
-                android:id="@+id/txt_save"
-                android:layout_width="wrap_content"
+            <ImageView
+                android:id="@+id/img_create"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:text="Save"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_xxlarge" />
+                android:clickable="true"
+                android:elevation="2dp"
+                android:focusable="true"
+                android:src="@drawable/ic_check_square"
+                app:tint="@color/white" />
         </LinearLayout>
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/img_user_image"
+            android:id="@+id/img_group_image"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_marginTop="24dp"
             android:clickable="true"
             android:focusable="true"
-            android:src="@drawable/ic_user"
+            android:src="@drawable/ic_login"
             app:civ_circle_background_color="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -76,13 +75,13 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:backgroundTint="@color/red"
-            android:elevation="0dp"
-            app:cardElevation="0dp"
             android:clickable="true"
+            android:elevation="0dp"
             android:focusable="true"
             app:cardCornerRadius="20dp"
-            app:layout_constraintBottom_toBottomOf="@+id/img_user_image"
-            app:layout_constraintEnd_toEndOf="@+id/img_user_image">
+            app:cardElevation="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/img_group_image"
+            app:layout_constraintEnd_toEndOf="@+id/img_group_image">
 
             <ImageView
                 android:id="@+id/img_picture"
@@ -94,11 +93,20 @@
 
         </com.google.android.material.card.MaterialCardView>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_add_member_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_group_image" />
+
         <LinearLayout
             android:id="@+id/layout_profile_content"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="24dp"
+            android:layout_height="300dp"
             android:background="@drawable/bg_layout_profile_content"
             android:elevation="10dp"
             android:orientation="vertical"
@@ -106,12 +114,12 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/img_user_image"
+            app:layout_constraintTop_toBottomOf="@+id/recycler_add_member_list"
             app:layout_constraintVertical_bias="1.0">
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -126,10 +134,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
-                        android:hint="Username">
+                        android:hint="Group Name">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/edt_txt_username"
+                            android:id="@+id/edt_txt_group_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ems="10"
@@ -142,70 +150,73 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
-                        android:hint="Email Address">
+                        android:hint="Group Explanation">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/edt_txt_email"
+                            android:id="@+id/edt_txt_group_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ems="10"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    <TextView
+                        android:id="@+id/txt_search_member"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:text="Add Member"
+                        android:textSize="@dimen/text_xxlarge" />
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        android:hint="Phone">
+                        android:layout_marginHorizontal="8dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/edt_txt_phone"
-                            android:layout_width="match_parent"
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:ems="10"
-                            android:inputType="number" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                            android:layout_weight="1"
+                            android:hint="Email Address">
 
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/btn_change_password"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_margin="8dp"
-                        android:clickable="true"
-                        android:elevation="5dp"
-                        android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackground"
-                        app:cardCornerRadius="0dp">
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/edt_txt_email"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableStart="@drawable/ic_person_search"
+                                android:drawablePadding="10dp"
+                                android:drawableTint="@color/light_navy"
+                                android:ems="10"
+                                android:inputType="textEmailAddress" />
+                        </com.google.android.material.textfield.TextInputLayout>
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_margin="14dp"
-                            android:text="Change Password" />
-                    </com.google.android.material.card.MaterialCardView>
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/btn_search"
+                            android:layout_width="55dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:backgroundTint="@color/light_navy"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:includeFontPadding="false">
 
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/btn_sign_out"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_margin="8dp"
-                        android:clickable="true"
-                        android:elevation="5dp"
-                        android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackground"
-                        app:cardCornerRadius="0dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_margin="14dp"
-                            android:text="Sign Out"
-                            android:textColor="@color/red" />
-                    </com.google.android.material.card.MaterialCardView>
-
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:padding="10dp"
+                                android:src="@drawable/ic_search"
+                                app:tint="@color/white" />
+                        </com.google.android.material.card.MaterialCardView>
+                    </LinearLayout>
                 </LinearLayout>
 
             </ScrollView>

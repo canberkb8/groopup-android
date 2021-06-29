@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.android.groopup.R
 import com.android.groopup.core.BaseFragment
+import com.android.groopup.data.remote.model.GroopUpAppData
 import com.android.groopup.data.remote.model.UserModel
 import com.android.groopup.databinding.FragmentProfileBinding
 import com.android.groopup.utils.extensions.changeFragment
@@ -66,6 +67,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
             if (it.isSuccessful){
                 profileViewModel.updateUser(userModel).let {
                     Toast.makeText(mainAct,"Profile Updated",Toast.LENGTH_LONG).show()
+                    GroopUpAppData.setCurrentUser(userModel)
                     mainAct?.sharedPreferencesHelper?.saveUserUpdateProfile(true)
                     mainAct?.dialogHelper?.dismissDialog()
                 }

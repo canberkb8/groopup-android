@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.groopup.data.remote.model.HomePageModel
 import com.android.groopup.data.remote.model.UserModel
 import com.android.groopup.data.repository.ApiRepository
 import com.android.groopup.utils.network.NetworkHelper
