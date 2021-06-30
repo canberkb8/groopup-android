@@ -27,7 +27,7 @@ class RegisterViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             createUserData.postValue(Resource.loading(null))
             if (networkHelper.isNetworkConnected()) {
-                apiRepository.createUser(userModel,userModel.userID).let { response ->
+                apiRepository.createUser(userModel,userModel.userID!!).let { response ->
                     if (response.isSuccessful){
                         createUserData.postValue(Resource.success(response.body()))
                         Timber.i("Create User Response Success")

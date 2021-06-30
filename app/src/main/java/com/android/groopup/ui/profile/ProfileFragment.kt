@@ -12,6 +12,7 @@ import com.android.groopup.data.remote.model.GroopUpAppData
 import com.android.groopup.data.remote.model.UserModel
 import com.android.groopup.databinding.FragmentProfileBinding
 import com.android.groopup.utils.extensions.changeFragment
+import com.android.groopup.utils.extensions.withGlideOrEmpty
 import com.android.groopup.utils.network.Status
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,6 +39,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
             viewBinding.edtTxtUsername.setText(userModel.userName)
             viewBinding.edtTxtEmail.setText(userModel.userEmail)
             viewBinding.edtTxtPhone.setText(userModel.userPhone)
+            withGlideOrEmpty(viewBinding.imgUserImage,userModel.userImage)
         }
 
         click()
@@ -63,7 +65,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
 
     private fun updateUser(userModel:UserModel){
         mainAct?.dialogHelper?.showDialog()
-        mainAct?.auth?.currentUser?.updateEmail(userModel.userEmail)?.addOnCompleteListener {
+        mainAct?.auth?.currentUser?.updateEmail(userModel.userEmail!!)?.addOnCompleteListener {
             if (it.isSuccessful){
                 profileViewModel.updateUser(userModel).let {
                     Toast.makeText(mainAct,"Profile Updated",Toast.LENGTH_LONG).show()

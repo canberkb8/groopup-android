@@ -1,10 +1,13 @@
 package com.android.groopup.ui.creategroup
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.android.groopup.data.remote.model.GroopUpAppData
 import com.android.groopup.data.remote.model.UserModel
 import com.android.groopup.databinding.CardCreateGroupMemberItemBinding
+import com.android.groopup.utils.extensions.withGlideOrEmpty
 
 class CreateGroupAdapter : RecyclerView.Adapter<CreateGroupAdapter.CreateGroupViewHolder>() {
 
@@ -39,8 +42,13 @@ class CreateGroupAdapter : RecyclerView.Adapter<CreateGroupAdapter.CreateGroupVi
     class CreateGroupViewHolder(private val cardCreateGroupMemberItemBinding: CardCreateGroupMemberItemBinding) :
         RecyclerView.ViewHolder(cardCreateGroupMemberItemBinding.root) {
         fun bind(userModel: UserModel, onItemClickListener: ((userModel: UserModel) -> Unit)?) {
-
-            cardCreateGroupMemberItemBinding.cardCreateGroupItem.setOnClickListener { onItemClickListener?.invoke(userModel) }
+            withGlideOrEmpty(cardCreateGroupMemberItemBinding.imgMemberImage,userModel.userImage)
+            if (userModel.userID == GroopUpAppData.getCurrentUser()?.userID){
+                cardCreateGroupMemberItemBinding.imgRemove.visibility = View.GONE
+            }else{
+                cardCreateGroupMemberItemBinding.imgRemove.visibility = View.VISIBLE
+            }
+            cardCreateGroupMemberItemBinding.imgRemove.setOnClickListener { onItemClickListener?.invoke(userModel) }
         }
 
     }

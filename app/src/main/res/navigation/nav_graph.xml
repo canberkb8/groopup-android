@@ -55,6 +55,19 @@
         <argument
             android:name="userModel"
             app:argType="com.android.groopup.data.remote.model.UserModel" />
+        <action
+            android:id="@+id/action_createGroupFragment_to_createGroupAddMemberDialog"
+            app:destination="@id/createGroupAddMemberDialog" />
     </fragment>
+
+    <dialog
+        android:id="@+id/createGroupAddMemberDialog"
+        android:name="com.android.groopup.ui.creategroup.CreateGroupAddMemberDialog"
+        android:label="CreateGroupAddMemberDialog"
+        tools:layout="@layout/dialog_create_group_add_member">
+        <argument
+            android:name="userModel"
+            app:argType="com.android.groopup.data.remote.model.UserModel" />
+    </dialog>
 
 </navigation>

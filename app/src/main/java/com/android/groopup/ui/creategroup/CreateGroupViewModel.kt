@@ -19,7 +19,7 @@ class CreateGroupViewModel @ViewModelInject constructor(
     private val createGroupData = MutableLiveData<Resource<Void>>()
     val createGroup: LiveData<Resource<Void>> get() = createGroupData
 
-    private val searchUserData = MutableLiveData<Resource<UserModel>>()
+    val searchUserData = MutableLiveData<Resource<UserModel>>()
     val searchUser: LiveData<Resource<UserModel>> get() = searchUserData
 
     init {
@@ -74,10 +74,34 @@ class CreateGroupViewModel @ViewModelInject constructor(
                 return item
             }
         }
-        return null
+        return UserModel()
+    }
+
+    fun checkIsUserInList(groupMemberList: ArrayList<UserModel>,member:UserModel):Boolean{
+        for(user in groupMemberList){
+            if(user == member){
+                return false
+            }
+        }
+        return true
     }
 
     fun generateGroupID():String{
         return  java.util.UUID.randomUUID().toString() + java.util.Calendar.getInstance().timeInMillis
+    }
+
+    fun handleInviteList(groupMemberList: ArrayList<UserModel>):ArrayList<UserModel>{
+        val inviteList:ArrayList<UserModel> = arrayListOf()
+        for(user in groupMemberList){
+            if(user != GroopUpAppData.getCurrentUser()){
+                inviteList.add(user)
+            }
+        }
+        return inviteList
+    }
+
+    fun removeUserObservers(owner:LifecycleOwner){
+        searchUserData.removeObservers(owner)
+        searchUser.removeObservers(owner)
     }
 }

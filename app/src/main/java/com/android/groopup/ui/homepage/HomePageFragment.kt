@@ -11,6 +11,7 @@ import com.android.groopup.data.remote.model.GroupModel
 import com.android.groopup.data.remote.model.UserModel
 import com.android.groopup.databinding.FragmentHomepageBinding
 import com.android.groopup.utils.extensions.changeFragment
+import com.android.groopup.utils.extensions.withGlideOrEmpty
 import com.android.groopup.utils.network.Status
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -32,7 +33,6 @@ class HomePageFragment : BaseFragment<FragmentHomepageBinding>() {
         getUserData(mainAct?.auth?.uid!!)
 
         //getJobList("deneme")
-        //createGroup(GroupModel("asd","asd","asd","asd","asd"),"deneme")
         click()
     }
 
@@ -66,6 +66,7 @@ class HomePageFragment : BaseFragment<FragmentHomepageBinding>() {
         }
         viewBinding.txtUserEmail.text = userModel!!.userEmail
         viewBinding.txtUserName.text = userModel!!.userName
+        withGlideOrEmpty(viewBinding.imgUserImage,userModel!!.userImage)
         mainAct?.sharedPreferencesHelper?.saveUserUpdateProfile(false)
     }
 
@@ -90,15 +91,6 @@ class HomePageFragment : BaseFragment<FragmentHomepageBinding>() {
                 }
             }
         })
-    }
-
-    private fun createGroup(groupModel: GroupModel, groupID: String) {
-        homePageViewModel.createGroup(
-            groupModel,
-            groupID
-        ).let {
-            Timber.i("Create Group Success")
-        }
     }
 
     private fun profileFragmentAction(){

@@ -22,7 +22,7 @@ class ProfileViewModel@ViewModelInject constructor(
     fun updateUser(userModel: UserModel){
         viewModelScope.launch {
             if (networkHelper.isNetworkConnected()) {
-                apiRepository.createUser(userModel,userModel.userID).let { response ->
+                apiRepository.createUser(userModel,userModel.userID!!).let { response ->
                     if (response.isSuccessful){
                         Timber.i("Update User Response Success")
                     }
