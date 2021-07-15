@@ -30,7 +30,12 @@ class HomePageFragment : BaseFragment<FragmentHomepageBinding>() {
         viewBinding.lifecycleOwner = viewLifecycleOwner
         viewBinding.txtAppVersion.text = mainAct?.util?.getAppVersion()
 
-        getUserData(mainAct?.auth?.uid!!)
+        if (mainAct?.auth?.uid != null){
+            getUserData(mainAct?.auth?.uid!!)
+        }else{
+            mainAct?.changeFragment(R.id.loginFragment)
+        }
+
 
         //getJobList("deneme")
         click()

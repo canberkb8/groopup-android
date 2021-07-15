@@ -99,6 +99,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:21.0.1'
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-storage:20.0.0'
 
     //LifeCycleExtension
     implementation "android.arch.lifecycle:extensions:1.1.1"

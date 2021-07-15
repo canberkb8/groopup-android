@@ -62,7 +62,7 @@ private fun Context.convertDpToPixel(borderInDip: Float): Float {
  */
 fun Bitmap.createBitmapWithBorder(
     borderSize: Float,
-    borderColor: Int = R.color.white,
+    borderColor: Int = R.color.light_navy,
     context: Context
 ): Bitmap {
     val borderOffset = (borderSize * 2).toInt()
@@ -111,7 +111,7 @@ fun Bitmap.createBitmapWithBorder(
     requireAll = false
 )
 fun withGlideOrEmpty(
-    imageView: ImageView, url: String = "", borderSize: Float = 0F, borderColor: Int = R.color.white
+    imageView: ImageView, url: String = "", borderSize: Float = 0F, borderColor: Int = R.color.light_navy
 ) {
     imageView.loadCircularImage(url, borderSize, borderColor)
 }

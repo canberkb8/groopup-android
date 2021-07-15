@@ -13,12 +13,16 @@ import com.android.groopup.utils.Utils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>() {
 
+    lateinit var mStorageRef: StorageReference
+    lateinit var firebaseStorage: FirebaseStorage
     lateinit var auth: FirebaseAuth
     var navController: NavController? = null
     @Inject
@@ -35,6 +39,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
+        firebaseStorage = FirebaseStorage.getInstance()
+        mStorageRef = firebaseStorage.getReferenceFromUrl("gs://fb-groopup.appspot.com/")
         navController = Navigation.findNavController(
             this,
             R.id.nav_host_fragment
