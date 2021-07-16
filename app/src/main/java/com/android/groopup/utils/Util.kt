@@ -1,10 +1,13 @@
 package com.android.groopup.utils
 
 import android.app.Activity
+import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Environment
+import android.graphics.Bitmap
+import android.net.Uri
+import android.provider.MediaStore
 import dagger.hilt.android.scopes.ActivityScoped
-import java.io.File
+import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 class Utils @Inject constructor(@ActivityScoped private val activity: Activity) {
@@ -20,4 +23,10 @@ class Utils @Inject constructor(@ActivityScoped private val activity: Activity) 
         return ""
     }
 
+    fun getUriFromBitmap(inContext: Context, inImage: Bitmap) : Uri {
+        val bytes = ByteArrayOutputStream()
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(inContext.contentResolver, inImage, "Title", null)
+        return Uri.parse(path)
+    }
 }

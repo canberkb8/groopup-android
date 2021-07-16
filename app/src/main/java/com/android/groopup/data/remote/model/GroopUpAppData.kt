@@ -6,6 +6,7 @@ object GroopUpAppData {
     fun getUserList(): ArrayList<UserModel> { return userList }
     fun setUserList(userList: ArrayList<UserModel>) { this.userList = userList }
     fun updateUserForList(index: Int, userModel: UserModel) { userList[index] = userModel }
+    fun addUserInUserList(userModel: UserModel) { userList.add(userModel)}
 
     private var currentUser: UserModel? = null
     fun getCurrentUser(): UserModel? { return currentUser }

@@ -1,7 +1,9 @@
 package com.android.groopup.ui
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.android.groopup.R

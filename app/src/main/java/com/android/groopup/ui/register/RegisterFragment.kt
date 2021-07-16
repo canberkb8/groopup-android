@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.android.groopup.R
 import com.android.groopup.core.BaseFragment
+import com.android.groopup.data.remote.model.GroopUpAppData
 import com.android.groopup.data.remote.model.UserModel
 import com.android.groopup.databinding.FragmentRegisterBinding
 import com.android.groopup.ui.homepage.HomePageViewModel
@@ -18,6 +19,7 @@ import timber.log.Timber
 @AndroidEntryPoint
 class RegisterFragment : BaseFragment<FragmentRegisterBinding>() {
     private val registerViewModel: RegisterViewModel by viewModels()
+    private lateinit var registerUserModel:UserModel
     override fun getLayoutRes(): Int {
         return R.layout.fragment_register
     }
@@ -49,7 +51,8 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>() {
                                 Timber.i("Success")
                                 mainAct?.sharedPreferencesHelper?.saveUserLogin(true)
                                 mainAct?.sharedPreferencesHelper?.saveUserToken(mainAct?.auth?.currentUser?.uid!!)
-                                registerViewModel.createUser(UserModel(mainAct?.auth?.currentUser?.uid!!,email)).let {
+                                registerUserModel = UserModel(mainAct?.auth?.currentUser?.uid!!,email)
+                                registerViewModel.createUser(registerUserModel).let {
                                     createUser()
                                 }
                             } else {
@@ -73,6 +76,7 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>() {
             when (it.status) {
                 Status.SUCCESS -> {
                     mainAct?.dialogHelper?.dismissDialog()
+                    GroopUpAppData.addUserInUserList(registerUserModel)
                     activity?.changeFragment(R.id.homePageFragment)
                 }
                 Status.LOADING -> {

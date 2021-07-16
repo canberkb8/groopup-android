@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
@@ -39,20 +40,17 @@ import java.io.File
 class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
     private val profileViewModel: ProfileViewModel by viewModels()
     private lateinit var userModel: UserModel
-    private lateinit var filePhoto: File
     private var userName: String = ""
     private var userEmail: String = ""
     private var userPhone: String = ""
     private var userImg: String = ""
-    private lateinit var selectedImageUri: Uri
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var openCameraButton: LinearLayout
     private lateinit var openGalleryButton: LinearLayout
 
     companion object {
-        private const val IMAGE_CHOOSE = 1000
-        private const val PERMISSION_CODE = 1001
-        private const val REQUEST_CODE = 13
+        private const val CAMERA_REQUEST_CODE = 101
+        private const val GALLERY_REQUEST_CODE = 100
     }
 
     override fun getLayoutRes(): Int {
@@ -78,17 +76,14 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            if (requestCode == REQUEST_CODE) {
-                val takenPhoto = BitmapFactory.decodeFile(filePhoto.absolutePath)
-                viewBinding.imgUserImage.setImageBitmap(takenPhoto)
-            } else if (requestCode == IMAGE_CHOOSE) {
-                selectedImageUri = data?.data!!
-                Glide.with(requireActivity())
-                    .load(selectedImageUri)
-                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                    .optionalCenterCrop()
-                    .into(viewBinding.imgUserImage)
-                uploadImg(selectedImageUri)
+            when (requestCode) {
+                CAMERA_REQUEST_CODE -> {
+                    val bitmap = data?.extras?.get("data") as Bitmap
+                    uploadImg(mainAct?.util?.getUriFromBitmap(requireContext(), bitmap)!!)
+                }
+                GALLERY_REQUEST_CODE -> {
+                    uploadImg(data?.data!!)
+                }
             }
         }
     }
@@ -99,9 +94,16 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
         grantResults: IntArray
     ) {
         when (requestCode) {
-            PERMISSION_CODE -> {
+            GALLERY_REQUEST_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    chooseImageGallery()
+                    openGallery()
+                } else {
+                    Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show()
+                }
+            }
+            CAMERA_REQUEST_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openCamera()
                 } else {
                     Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show()
                 }
@@ -132,60 +134,48 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
             bottomSheetBehavior.state = state
         }
         openCameraButton.setOnClickListener {
-            openCamera()
+            cameraPermission()
         }
         openGalleryButton.setOnClickListener {
-            openGallery()
+            galleryPermission()
+        }
+    }
+
+    private fun cameraPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (mainAct?.checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
+                val permissions = arrayOf(Manifest.permission.CAMERA)
+                requestPermissions(permissions, CAMERA_REQUEST_CODE)
+            } else {
+                openCamera()
+            }
+        } else {
+            openCamera()
         }
     }
 
     private fun openCamera() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (mainAct?.checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
-                val permissions = arrayOf(Manifest.permission.CAMERA)
-                requestPermissions(permissions, REQUEST_CODE)
-            } else {
-                takePhoto()
-            }
-        } else {
-            takePhoto()
-        }
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        startActivityForResult(intent, CAMERA_REQUEST_CODE)
     }
 
-    private fun takePhoto() {
-        val FILE_NAME = "photo"
-        val takePhotoIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        filePhoto = getPhotoFile(FILE_NAME)
-        val providerFile = FileProvider.getUriForFile(
-            requireContext(),
-            "com.android.groopup.fileprovider",
-            filePhoto
-        )
-        takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, providerFile)
-    }
-
-    private fun openGallery() {
+    private fun galleryPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (mainAct?.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
                 val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-                requestPermissions(permissions, PERMISSION_CODE)
+                requestPermissions(permissions, GALLERY_REQUEST_CODE)
             } else {
-                chooseImageGallery();
+                openGallery()
             }
         } else {
-            chooseImageGallery();
+            openGallery()
         }
     }
 
-    private fun getPhotoFile(fileName: String): File {
-        val directoryStorage = mainAct?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        return File.createTempFile(fileName, ".jpg", directoryStorage)
-    }
-
-    private fun chooseImageGallery() {
+    private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
-        startActivityForResult(intent, IMAGE_CHOOSE)
+        startActivityForResult(intent, GALLERY_REQUEST_CODE)
     }
 
     private fun initBottomSheet() {
@@ -207,11 +197,16 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
                 }
             }
         })
-
     }
+
 
     private fun uploadImg(selectedImageUri: Uri) {
         try {
+            Glide.with(requireActivity())
+                .load(selectedImageUri)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .optionalCenterCrop()
+                .into(viewBinding.imgUserImage)
             mainAct?.dialogHelper?.showDialog()
             mainAct?.mStorageRef = FirebaseStorage.getInstance().reference
             val imfRef = mainAct?.mStorageRef?.child("users/profileImg")
