@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import com.android.groopup.R
+import com.android.groopup.data.remote.model.GroopUpAppData
 import com.android.groopup.databinding.DialogCreateGroupAddMemberBinding
 import com.android.groopup.ui.MainActivity
 import com.android.groopup.utils.extensions.withGlideOrEmpty
@@ -54,17 +55,23 @@ class CreateGroupAddMemberDialog : DialogFragment() {
 
     private fun click() {
         viewBinding.btnYes.setOnClickListener {
-            mainActivity?.navController?.previousBackStackEntry?.savedStateHandle?.set(
-                "KeyYes",
-                true
-            )
+            GroopUpAppData.setKey(true)
+            if(GroopUpAppData.getKey()){
+                mainActivity?.navController?.previousBackStackEntry?.savedStateHandle?.set(
+                    "KeyYes",
+                    true
+                )
+            }
             dismiss()
         }
         viewBinding.btnNo.setOnClickListener {
-            mainActivity?.navController?.previousBackStackEntry?.savedStateHandle?.set(
-                "KeyNo",
-                true
-            )
+            GroopUpAppData.setKey(false)
+            if(!GroopUpAppData.getKey()){
+                mainActivity?.navController?.previousBackStackEntry?.savedStateHandle?.set(
+                    "KeyNo",
+                    true
+                )
+            }
             dismiss()
         }
     }

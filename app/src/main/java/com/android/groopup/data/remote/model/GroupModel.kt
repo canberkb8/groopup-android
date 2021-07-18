@@ -17,7 +17,7 @@ data class GroupModel(
     @SerializedName("groupFounderID")
     val groupFounderID:String?=null,
     @SerializedName("groupMemberList")
-    val groupMemberList:ArrayList<UserModel>? = null,
+    val groupMemberList:ArrayList<String>? = null,
     @SerializedName("groupInviteList")
-    val groupInviteList:ArrayList<UserModel>? = null,
+    val groupInviteList:ArrayList<String>? = null,
 ) : Parcelable

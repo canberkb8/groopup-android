@@ -52,6 +52,8 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>() {
                                 mainAct?.sharedPreferencesHelper?.saveUserLogin(true)
                                 mainAct?.sharedPreferencesHelper?.saveUserToken(mainAct?.auth?.currentUser?.uid!!)
                                 registerUserModel = UserModel(mainAct?.auth?.currentUser?.uid!!,email)
+                                registerUserModel.userGroupList.add("")
+                                registerUserModel.userInviteList.add("")
                                 registerViewModel.createUser(registerUserModel).let {
                                     createUser()
                                 }

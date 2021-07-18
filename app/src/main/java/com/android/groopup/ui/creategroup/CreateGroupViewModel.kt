@@ -26,6 +26,18 @@ class CreateGroupViewModel @ViewModelInject constructor(
 
     }
 
+    fun updateUser(userModel: UserModel){
+        viewModelScope.launch {
+            if (networkHelper.isNetworkConnected()) {
+                apiRepository.createUser(userModel,userModel.userID!!).let { response ->
+                    if (response.isSuccessful){
+                        Timber.i("Update User Response Success")
+                    }
+                }
+            }
+        }
+    }
+
     fun createGroup(groupModel: GroupModel){
         viewModelScope.launch {
             createGroupData.postValue(Resource.loading(null))
@@ -90,11 +102,11 @@ class CreateGroupViewModel @ViewModelInject constructor(
         return  java.util.UUID.randomUUID().toString() + java.util.Calendar.getInstance().timeInMillis
     }
 
-    fun handleInviteList(groupMemberList: ArrayList<UserModel>):ArrayList<UserModel>{
-        val inviteList:ArrayList<UserModel> = arrayListOf()
+    fun handleInviteList(groupMemberList: ArrayList<UserModel>):ArrayList<String>{
+        val inviteList:ArrayList<String> = arrayListOf()
         for(user in groupMemberList){
             if(user != GroopUpAppData.getCurrentUser()){
-                inviteList.add(user)
+                inviteList.add(user.userID!!)
             }
         }
         return inviteList

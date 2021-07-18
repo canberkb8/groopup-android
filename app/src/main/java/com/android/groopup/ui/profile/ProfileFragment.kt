@@ -30,6 +30,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.storage.FirebaseStorage
+import com.google.gson.annotations.SerializedName
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.bottom_sheet_persistent.*
 import timber.log.Timber
@@ -44,6 +45,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
     private var userEmail: String = ""
     private var userPhone: String = ""
     private var userImg: String = ""
+    private var userGroupList:ArrayList<String> = arrayListOf()
+    private var userInviteList:ArrayList<String> = arrayListOf()
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var openCameraButton: LinearLayout
     private lateinit var openGalleryButton: LinearLayout
@@ -73,7 +76,6 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             when (requestCode) {
@@ -124,7 +126,10 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
             userEmail = viewBinding.edtTxtEmail.text.toString().trim()
             userName = viewBinding.edtTxtUsername.text.toString().trim()
             userPhone = viewBinding.edtTxtPhone.text.toString().trim()
-            updateUser(UserModel(mainAct?.auth?.uid!!, userEmail, userName, userImg, userPhone))
+            val newUserModel = UserModel(mainAct?.auth?.uid!!, userEmail, userName, userImg, userPhone)
+            newUserModel.userInviteList = userModel.userInviteList
+            newUserModel.userGroupList = userModel.userGroupList
+            updateUser(newUserModel)
         }
         viewBinding.imgCamera.setOnClickListener {
             val state = if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED)

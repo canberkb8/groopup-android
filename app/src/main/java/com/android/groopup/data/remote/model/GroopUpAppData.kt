@@ -11,4 +11,8 @@ object GroopUpAppData {
     private var currentUser: UserModel? = null
     fun getCurrentUser(): UserModel? { return currentUser }
     fun setCurrentUser(currentUser: UserModel?) { this.currentUser = currentUser }
+
+    private var key: Boolean = false
+    fun getKey(): Boolean { return key }
+    fun setKey(key: Boolean){ this.key = key }
 }
