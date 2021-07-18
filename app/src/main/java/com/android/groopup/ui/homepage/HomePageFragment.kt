@@ -4,13 +4,16 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.groopup.R
 import com.android.groopup.core.BaseFragment
 import com.android.groopup.data.remote.model.GroopUpAppData
 import com.android.groopup.data.remote.model.GroupModel
 import com.android.groopup.data.remote.model.UserModel
 import com.android.groopup.databinding.FragmentHomepageBinding
+import com.android.groopup.ui.creategroup.CreateGroupAdapter
 import com.android.groopup.utils.extensions.changeFragment
+import com.android.groopup.utils.extensions.observeOnce
 import com.android.groopup.utils.extensions.withGlideOrEmpty
 import com.android.groopup.utils.network.Status
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,6 +24,9 @@ import java.util.HashMap
 class HomePageFragment : BaseFragment<FragmentHomepageBinding>() {
     private val homePageViewModel: HomePageViewModel by viewModels()
     private var userModel: UserModel? = null
+    private var groupListData:ArrayList<GroupModel> = arrayListOf()
+    private val homePageAdapter = HomePageAdapter()
+
     override fun getLayoutRes(): Int {
         return R.layout.fragment_homepage
     }
@@ -35,9 +41,6 @@ class HomePageFragment : BaseFragment<FragmentHomepageBinding>() {
         }else{
             mainAct?.changeFragment(R.id.loginFragment)
         }
-
-
-        //getJobList("deneme")
         click()
     }
 
@@ -60,7 +63,7 @@ class HomePageFragment : BaseFragment<FragmentHomepageBinding>() {
 
     private fun getUserData(userID: String) {
         for ((index, item) in GroopUpAppData.getUserList().withIndex()) {
-            if (item.userID == userID)
+            if (item.userID == userID){
                 if (mainAct?.sharedPreferencesHelper?.getUserUpdateProfile() == true) {
                     GroopUpAppData.updateUserForList(index,GroopUpAppData.getCurrentUser()!!)
                     userModel = GroopUpAppData.getCurrentUser()!!
@@ -68,6 +71,10 @@ class HomePageFragment : BaseFragment<FragmentHomepageBinding>() {
                     userModel = item
                     GroopUpAppData.setCurrentUser(userModel)
                 }
+                userModel?.userGroupList?.removeAt(0)
+                homePageAdapter.userGroupList = userModel?.userGroupList!!
+                setAdapter()
+            }
         }
         viewBinding.txtUserEmail.text = userModel!!.userEmail
         viewBinding.txtUserName.text = userModel!!.userName
@@ -75,14 +82,18 @@ class HomePageFragment : BaseFragment<FragmentHomepageBinding>() {
         mainAct?.sharedPreferencesHelper?.saveUserUpdateProfile(false)
     }
 
-    private fun getJobList(groupID: String) {
+
+    private fun getGroupData(groupID: String) {
         homePageViewModel.getGroupData(groupID)
         homePageViewModel.group.observe(viewLifecycleOwner, Observer {
             when (it.status) {
                 Status.SUCCESS -> {
                     it.data?.let { response ->
                         Timber.i("Success")
-                        Timber.i("response --->$response")
+                        groupListData.add(response)
+                        for(item in groupListData){
+                            Timber.i("response --->$item")
+                        }
                         mainAct?.dialogHelper?.dismissDialog()
                     }
                 }
@@ -105,5 +116,17 @@ class HomePageFragment : BaseFragment<FragmentHomepageBinding>() {
             )
         }
         action?.let { direction -> activity?.changeFragment(direction) }
+    }
+
+    private fun setAdapter() {
+        viewBinding.recyclerView.apply {
+            setHasFixedSize(true)
+            adapter = homePageAdapter
+            layoutManager = LinearLayoutManager(
+                requireContext(),
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+        }
     }
 }

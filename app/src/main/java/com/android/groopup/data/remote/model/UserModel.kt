@@ -3,6 +3,7 @@ package com.android.groopup.data.remote.model
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
 
 @Parcelize
 data class UserModel(
@@ -17,7 +18,7 @@ data class UserModel(
     @SerializedName("userPhone")
     val userPhone: String="",
     @SerializedName("userGroupList")
-    var userGroupList:ArrayList<String> = arrayListOf(),
+    var userGroupList:@RawValue ArrayList<UserGroupModel> = arrayListOf(),
     @SerializedName("userInviteList")
-    var userInviteList:ArrayList<String> = arrayListOf()
+    var userInviteList:@RawValue ArrayList<UserGroupModel> = arrayListOf()
 ) : Parcelable

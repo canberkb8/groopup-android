@@ -58,16 +58,4 @@ class HomePageViewModel@ViewModelInject constructor(
             }
         }
     }
-
-    fun createGroup(groupModel: GroupModel, groupID:String){
-        viewModelScope.launch {
-            if (networkHelper.isNetworkConnected()) {
-                apiRepository.createGroup(groupModel,groupID).let { response ->
-                    if (response.isSuccessful){
-                        Timber.i("Create Group Response Success")
-                    }
-                }
-            }
-        }
-    }
 }

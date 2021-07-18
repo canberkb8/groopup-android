@@ -20,6 +20,7 @@ import com.android.groopup.R
 import com.android.groopup.core.BaseFragment
 import com.android.groopup.data.remote.model.GroopUpAppData
 import com.android.groopup.data.remote.model.GroupModel
+import com.android.groopup.data.remote.model.UserGroupModel
 import com.android.groopup.data.remote.model.UserModel
 import com.android.groopup.databinding.FragmentCreateGroupBinding
 import com.android.groopup.ui.profile.ProfileFragment
@@ -219,10 +220,10 @@ class CreateGroupFragment : BaseFragment<FragmentCreateGroupBinding>() {
             createGroupViewModel.createGroup.observe(viewLifecycleOwner, Observer {
                 when (it.status) {
                     Status.SUCCESS -> {
-                        currentUser.userGroupList?.add(groupModel.groupID!!)
+                        currentUser.userGroupList.add(UserGroupModel(groupModel.groupID!!,groupModel.groupTitle,groupModel.groupSubTitle,groupImg))
                         GroopUpAppData.setCurrentUser(currentUser)
                         createGroupViewModel.updateUser(currentUser)
-                        sendInvite(groupModel.groupID!!)
+                        sendInvite(groupModel)
                         mainAct?.dialogHelper?.dismissDialog()
                     }
                     Status.LOADING -> {
@@ -236,10 +237,10 @@ class CreateGroupFragment : BaseFragment<FragmentCreateGroupBinding>() {
         }
     }
 
-    private fun sendInvite(groupID:String){
+    private fun sendInvite(groupModel:GroupModel){
         for(user in groupMemberList){
             if(user != currentUser){
-                user.userInviteList?.add(groupID)
+                user.userInviteList.add(UserGroupModel(groupModel.groupID!!,groupModel.groupTitle,groupModel.groupSubTitle,groupImg))
                 createGroupViewModel.updateUser(user)
             }
         }

@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import com.android.groopup.R
 import com.android.groopup.core.BaseFragment
 import com.android.groopup.data.remote.model.GroopUpAppData
+import com.android.groopup.data.remote.model.UserGroupModel
 import com.android.groopup.data.remote.model.UserModel
 import com.android.groopup.databinding.FragmentRegisterBinding
 import com.android.groopup.ui.homepage.HomePageViewModel
@@ -52,8 +53,8 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>() {
                                 mainAct?.sharedPreferencesHelper?.saveUserLogin(true)
                                 mainAct?.sharedPreferencesHelper?.saveUserToken(mainAct?.auth?.currentUser?.uid!!)
                                 registerUserModel = UserModel(mainAct?.auth?.currentUser?.uid!!,email)
-                                registerUserModel.userGroupList.add("")
-                                registerUserModel.userInviteList.add("")
+                                registerUserModel.userGroupList.add(UserGroupModel())
+                                registerUserModel.userInviteList.add(UserGroupModel())
                                 registerViewModel.createUser(registerUserModel).let {
                                     createUser()
                                 }
