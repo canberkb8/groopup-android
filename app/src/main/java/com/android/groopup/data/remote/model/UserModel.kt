@@ -18,7 +18,7 @@ data class UserModel(
     @SerializedName("userPhone")
     val userPhone: String="",
     @SerializedName("userGroupList")
-    var userGroupList:@RawValue ArrayList<UserGroupModel> = arrayListOf(),
+    var userGroupList:@RawValue HashMap<String,UserGroupModel>?= null,
     @SerializedName("userInviteList")
-    var userInviteList:@RawValue ArrayList<UserGroupModel> = arrayListOf()
+    var userInviteList:@RawValue HashMap<String,UserGroupModel>?= null
 ) : Parcelable

@@ -1,6 +1,7 @@
 package com.android.groopup.data.remote.api
 
 import com.android.groopup.data.remote.model.GroupModel
+import com.android.groopup.data.remote.model.UserGroupModel
 import com.android.groopup.data.remote.model.UserModel
 import retrofit2.Response
 import retrofit2.http.*
@@ -21,5 +22,11 @@ interface ApiInterface {
 
     @PUT("groupList/{groupID}.json")
     suspend fun createGroup(@Body groupModel: GroupModel, @Path("groupID") groupID:String): Response<Void>
+
+    @POST("userList/{userID}/userGroupList.json")
+    suspend fun addUserGroupList(@Path("userID") userID:String, @Body userGroupModel: UserGroupModel): Response<Void>
+
+    @POST("userList/{userID}/userInviteList.json")
+    suspend fun userInvite(@Path("userID") userID:String, @Body userGroupModel: UserGroupModel): Response<Void>
 
 }

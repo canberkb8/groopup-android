@@ -22,8 +22,28 @@ class CreateGroupViewModel @ViewModelInject constructor(
     val searchUserData = MutableLiveData<Resource<UserModel>>()
     val searchUser: LiveData<Resource<UserModel>> get() = searchUserData
 
+    private val userData = MutableLiveData<Resource<UserModel>>()
+    val user: LiveData<Resource<UserModel>> get() = userData
+
     init {
 
+    }
+
+    fun getUserData(userID:String){
+        viewModelScope.launch {
+            userData.postValue(Resource.loading(null))
+            if (networkHelper.isNetworkConnected()) {
+                apiRepository.getUserData(userID).let { response ->
+                    if (response.isSuccessful){
+                        userData.postValue(Resource.success(response.body()))
+                    }else{
+                        userData.postValue(Resource.error(response.errorBody().toString(),null))
+                    }
+                }
+            }else{
+                userData.postValue(Resource.error(connectionError,null))
+            }
+        }
     }
 
     fun updateUser(userModel: UserModel){
@@ -72,6 +92,12 @@ class CreateGroupViewModel @ViewModelInject constructor(
         }
     }
 
+    fun sendInvite(userID:String){
+        viewModelScope.launch {
+            
+        }
+    }
+
     private fun generateHashToArray(hashMap:HashMap<String,UserModel>):ArrayList<UserModel>{
         val list:ArrayList<UserModel> = arrayListOf()
         for(item in hashMap){
@@ -80,7 +106,7 @@ class CreateGroupViewModel @ViewModelInject constructor(
         return list
     }
 
-    private fun findUserWithEmail(email:String,list:ArrayList<UserModel>):UserModel?{
+    private fun findUserWithEmail(email:String,list:ArrayList<UserModel>):UserModel{
         for (item in list){
             if (item.userEmail == email){
                 return item

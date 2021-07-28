@@ -3,6 +3,7 @@ package com.android.groopup.ui.homepage
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.android.groopup.data.remote.model.GroupModel
+import com.android.groopup.data.remote.model.UserGroupModel
 import com.android.groopup.data.remote.model.UserModel
 import com.android.groopup.data.repository.ApiRepository
 import com.android.groopup.utils.network.NetworkHelper
@@ -57,5 +58,13 @@ class HomePageViewModel@ViewModelInject constructor(
                 groupData.postValue(Resource.error(connectionError,null))
             }
         }
+    }
+
+    fun generateHashToArray(hashMap:HashMap<String,UserGroupModel>):ArrayList<UserGroupModel>{
+        val list:ArrayList<UserGroupModel> = arrayListOf()
+        for(item in hashMap){
+            list.add(item.value)
+        }
+        return list
     }
 }

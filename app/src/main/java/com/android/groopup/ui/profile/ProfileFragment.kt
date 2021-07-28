@@ -45,8 +45,6 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
     private var userEmail: String = ""
     private var userPhone: String = ""
     private var userImg: String = ""
-    private var userGroupList:ArrayList<String> = arrayListOf()
-    private var userInviteList:ArrayList<String> = arrayListOf()
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var openCameraButton: LinearLayout
     private lateinit var openGalleryButton: LinearLayout

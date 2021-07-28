@@ -9,6 +9,7 @@ import com.android.groopup.R
 import com.android.groopup.core.BaseFragment
 import com.android.groopup.data.remote.model.GroopUpAppData
 import com.android.groopup.data.remote.model.GroupModel
+import com.android.groopup.data.remote.model.UserGroupModel
 import com.android.groopup.data.remote.model.UserModel
 import com.android.groopup.databinding.FragmentHomepageBinding
 import com.android.groopup.ui.creategroup.CreateGroupAdapter
@@ -24,7 +25,6 @@ import java.util.HashMap
 class HomePageFragment : BaseFragment<FragmentHomepageBinding>() {
     private val homePageViewModel: HomePageViewModel by viewModels()
     private var userModel: UserModel? = null
-    private var groupListData:ArrayList<GroupModel> = arrayListOf()
     private val homePageAdapter = HomePageAdapter()
 
     override fun getLayoutRes(): Int {
@@ -71,42 +71,13 @@ class HomePageFragment : BaseFragment<FragmentHomepageBinding>() {
                     userModel = item
                     GroopUpAppData.setCurrentUser(userModel)
                 }
-                userModel?.userGroupList?.removeAt(0)
-                homePageAdapter.userGroupList = userModel?.userGroupList!!
-                setAdapter()
+                setAdapter(userModel?.userGroupList!!)
             }
         }
         viewBinding.txtUserEmail.text = userModel!!.userEmail
         viewBinding.txtUserName.text = userModel!!.userName
         withGlideOrEmpty(viewBinding.imgUserImage,userModel!!.userImage)
         mainAct?.sharedPreferencesHelper?.saveUserUpdateProfile(false)
-    }
-
-
-    private fun getGroupData(groupID: String) {
-        homePageViewModel.getGroupData(groupID)
-        homePageViewModel.group.observe(viewLifecycleOwner, Observer {
-            when (it.status) {
-                Status.SUCCESS -> {
-                    it.data?.let { response ->
-                        Timber.i("Success")
-                        groupListData.add(response)
-                        for(item in groupListData){
-                            Timber.i("response --->$item")
-                        }
-                        mainAct?.dialogHelper?.dismissDialog()
-                    }
-                }
-                Status.LOADING -> {
-                    Timber.i("Loading")
-                    mainAct?.dialogHelper?.showDialog()
-                }
-                Status.ERROR -> {
-                    Timber.i("Error")
-                    mainAct?.dialogHelper?.dismissDialog()
-                }
-            }
-        })
     }
 
     private fun profileFragmentAction(){
@@ -118,7 +89,8 @@ class HomePageFragment : BaseFragment<FragmentHomepageBinding>() {
         action?.let { direction -> activity?.changeFragment(direction) }
     }
 
-    private fun setAdapter() {
+    private fun setAdapter(userGroupModel: HashMap<String,UserGroupModel>) {
+        homePageAdapter.userGroupList = homePageViewModel.generateHashToArray(userGroupModel)
         viewBinding.recyclerView.apply {
             setHasFixedSize(true)
             adapter = homePageAdapter
@@ -129,4 +101,5 @@ class HomePageFragment : BaseFragment<FragmentHomepageBinding>() {
             )
         }
     }
+
 }

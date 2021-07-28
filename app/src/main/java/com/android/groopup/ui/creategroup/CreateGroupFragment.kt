@@ -149,7 +149,7 @@ class CreateGroupFragment : BaseFragment<FragmentCreateGroupBinding>() {
         }
         viewBinding.imgCreate.setOnClickListener {
             if (groupImg == "") groupImg = "https://i.dlpng.com/static/png/6449915_preview.png"
-            createGroup(
+            getUserData(
                 GroupModel(
                     createGroupViewModel.generateGroupID(),
                     viewBinding.edtTxtGroupName.text.toString(),
@@ -320,6 +320,29 @@ class CreateGroupFragment : BaseFragment<FragmentCreateGroupBinding>() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    private fun getUserData(groupModel: GroupModel) {
+        createGroupViewModel.getUserData(currentUser.userID!!).let {
+            createGroupViewModel.user.observe(viewLifecycleOwner, Observer {
+                when (it.status) {
+                    Status.SUCCESS -> {
+                        it.data.let { response ->
+                            currentUser = response!!
+                            GroopUpAppData.setCurrentUser(currentUser)
+                            createGroup(groupModel)
+                        }
+                        mainAct?.dialogHelper?.dismissDialog()
+                    }
+                    Status.LOADING -> {
+                        mainAct?.dialogHelper?.showDialog()
+                    }
+                    Status.ERROR -> {
+                        mainAct?.dialogHelper?.dismissDialog()
+                    }
+                }
+            })
         }
     }
 
